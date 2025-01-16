@@ -62,6 +62,13 @@ const users: IUser[] = [
   }
 ]
 
-cleanUserData(users)
-  .then(console.log)
-  .catch(console.log)
+const doClearUserData = async () => {
+  try {
+    const cleanedUserData = await cleanUserData(users)
+    console.log(cleanedUserData)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+doClearUserData()
