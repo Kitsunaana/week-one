@@ -15,35 +15,30 @@ const getRandomVariant = () => {
   return variantValues[randomIndex]
 }
 
-const getIsVariantWinner = (win: IVariant, loser: IVariant[]) => {
+const getIsVariantWinner = (winner: IVariant, loser: IVariant[]) => {
   return (player: IVariant, bot: IVariant) => {
     if (player === bot) return "Ничья"
 
-    return (player === win && loser.includes(bot)) ? "Победа" : "Поражение"
+    return (player === winner && loser.includes(bot)) ? "Победа" : "Поражение"
   }
 }
 
-const getIsStone = getIsVariantWinner("stone", ["scissors", "lizard"])
-const getIsScissors = getIsVariantWinner("scissors", ["paper", "lizard"])
-const getIsPaper = getIsVariantWinner("paper", ["stone", "spock"])
-const getIsLizard = getIsVariantWinner("lizard", ["spock", "paper"])
-const getIsSpock = getIsVariantWinner("spock", ["stone", "scissors"])
-
 const getIsWinner: Record<IVariant, (player: IVariant, bot: IVariant) => string> = {
-  stone: getIsStone,
-  scissors: getIsScissors,
-  paper: getIsPaper,
-  lizard: getIsLizard,
-  spock: getIsSpock,
+  stone: getIsVariantWinner("stone", ["scissors", "lizard"]),
+  scissors: getIsVariantWinner("scissors", ["paper", "lizard"]),
+  paper: getIsVariantWinner("paper", ["stone", "spock"]),
+  lizard: getIsVariantWinner("lizard", ["spock", "paper"]),
+  spock: getIsVariantWinner("spock", ["stone", "scissors"]),
 }
 
 const startGame = (variant: IVariant) => {
   const randomVariant = getRandomVariant()
 
-  return `
-    ${labelVariants[variant]} vs ${labelVariants[randomVariant]}
-    ${getIsWinner[variant](variant, randomVariant)}
-  `
+  return {
+    player: labelVariants[variant],
+    bot: labelVariants[randomVariant],
+    result: getIsWinner[variant](variant, randomVariant)
+  }
 }
 
 console.log(
